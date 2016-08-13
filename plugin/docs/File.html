@@ -1,0 +1,87 @@
+
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<title>File Methods</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<link rel="stylesheet"  href="../css/themes/default/theme.min.css" />
+		<link rel="stylesheet"  href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css" />
+		<script src="../js/energize-min.js"></script>
+		<script src="../js/jquery-1.8.1.min.js"></script>
+		<script src="../../../app.js"></script>
+		<script src="../js/example.js"></script>
+		<link rel="stylesheet" href="../css/docs.css" />
+		<script src="../js/jquery.mobile-1.2.0.min.js"></script>
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-position="fixed">
+		<a href='#' class='ui-btn-left' data-icon='arrow-l' data-theme="c" onclick="history.back(); return false">Back</a> <h1>File Methods</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+<div class="samp">&nbsp;ftp.GetFileDetails(file);</div>
+<p>This will return an Array Object with the following keys: name, size, type, timestamp, user, group. 
+<br><br>Size is in bytes. Type will be either 'File' or 'Directory'.</p>
+	<div data-role="collapsible" data-collapsed="true"  data-mini="true" data-theme="a" data-content-theme="b">
+			<h3>Example - File Details</h3>
+			<div id="examp0" style="font-size:70%">
+			<b id="snip0" style="font-size:100%">var file = ftp.GetFileDetails( 'image.png' );</b><br>
+				if (file) { <br>
+					&nbsp;&nbsp;var s = "Name: " + file.name + "\nType: " + file.type + "\nSize: " + file.size + " bytes\n" + file.timestamp + "\n\n"; <br>   
+} <br>
+app.Alert(s); <br>
+</div>
+						<div name="divCopy" align="right">
+				<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(snip0)">&nbsp;&nbsp;Copy&nbsp;&nbsp;</a>
+			</div>
+		</div>
+<br><span style="color:#0099CC">Returns:</span> Array Object or Boolean false on Error.<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.DownloadFile(remote, local, mode);</div>
+<p>This will download '<i>remote</i>' file to '<i>local</i>' storage.  'local' <b>must be an absolute path</b> (Example: '/sdcard/file.txt'). Mode accepts two options, 'ASCII' and 'BINARY'.  Defaults to 'BINARY'.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.UploadFile(local, remote, mode);</div>
+<p>This will upload '<i>local</i>' file to '<i>remote</i>' server.  'remote' can be either relative to CurrentWorkingDirectory or an absolute path from FTP root. Mode accepts two options, 'ASCII' and 'BINARY'.  Defaults to 'BINARY'.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p>
+		<div data-role="collapsible" data-collapsed="true"  data-mini="true" data-theme="a" data-content-theme="b">
+			<h3>Example - Upload File</h3>
+			<div id="examp1" style="font-size:70%">
+				<b id="snip1" style="font-size:100%">ftp.UploadFile('/sdcard/myimage.png', 'images/myimage.png', 'BINARY');</b>
+			</div>
+						<div name="divCopy" align="right">
+				<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(snip1)">&nbsp;&nbsp;Copy&nbsp;&nbsp;</a>
+			</div>
+		</div>
+<br>
+<div class="samp">&nbsp;ftp.DeleteFile(file);</div>
+<p>This will delete 'file'.  Without absolute paths, this will use the CurrentWorkingDirectory.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.RenameFile(file, newName);</div>
+<p>This will rename 'file' to 'newName'.  Without absolute paths, this will use the CurrentWorkingDirectory.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p>
+		<div data-role="collapsible" data-collapsed="true"  data-mini="true" data-theme="a" data-content-theme="b">
+			<h3>Example - Rename File</h3>
+			<div id="examp2" style="font-size:70%">
+				<b id="snip2" style="font-size:100%">if (ftp.RenameFile('image.jpg', 'myimage.png')) { app.Alert( 'Rename was successful.' )};</b>
+			</div>
+						<div name="divCopy" align="right">
+				<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(snip2)">&nbsp;&nbsp;Copy&nbsp;&nbsp;</a>
+			</div>
+
+		</div>
+<br><br>
+<div class="samp">&nbsp;ftp.FileExists(file);</div>
+<p>This will check if a 'file' exists on the server.  The path to the file can be relative to CurrentWorkingDirectory or absolute from the FTP root. Use <i>ftp.DirectoryExists</i> for checking if a directory exists.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p>
+
+			
+	</div><!-- /content -->
+	
+</div><!-- /page -->
+
+</body>
+</html>

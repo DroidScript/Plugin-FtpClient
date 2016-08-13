@@ -1,0 +1,188 @@
+
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<title>FtpClient</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <style type="text/css">
+        </style>
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-position="fixed">
+		<a href='#' class='ui-btn-left' data-icon='arrow-l' data-theme="c" onclick="history.back(); return false">Back</a> 
+		<h1>FtpClient</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<div align="center"><img src="img/FtpClient.png"></div>
+			
+		<p><b>The File Transfer Protocol (FTP)</b> is a standard network protocol used to transfer computer files from one host to another host over a TCP-based network, such as the Internet. FTP is built on a client-server architecture and uses separate control and data connections between the client and the server.</p>
+		
+		<p>This plugin allows DroidScript to communicate with the FTP protocol and complete the most common tasks needed in a client-server relationship.</p>
+		
+		<p>In order to use FtpClient, you must first load the plugin at the top of your script 
+		using the <b>LoadPlugin</b> method like this:</p>
+		
+		<div class="samp">&nbsp;app.LoadPlugin( "FtpClient" );</div>
+		
+		<p>Then you can create an instance of the plugin object when you need it like this:</p>
+		
+		<div class="samp">&nbsp;ftp = app.CreateFtpClient();</div>
+		<p>The first step to using FtpClient is to <a href="docs/Connect.html">Connect</a> to a FTP server.</p>
+		<br>
+	<p>The following methods are provided by the FtpClient object:</p>
+		
+		<ul data-role="listview" data-inset="true" data-filter="false" >
+			
+			<li><a href="docs/Connect.html">Connect/Communication</a></li>
+			<li><a href="docs/Directory.html">Directory</a></li>
+			<li><a href="docs/File.html">File</a></li>
+		</ul>
+<br>
+<p><b><span style="color:#0099CC"><large>Version Information:</large></span></b></p>
+<div class="samp">&nbsp;ftp.GetVersion();</div>
+<p>Returns the plugin author and version.</p>
+<br>
+<p><b><span style="color:#0099CC"><large>Error Handling:</large></span></b></p>
+<div class="samp">&nbsp;ftp.GetError();</div>
+		<div data-role="collapsible" data-collapsed="true"  data-mini="true" data-theme="a" data-content-theme="b">
+			<h3>Example - Display Error</h3>
+			<div id="examp2" style="font-size:70%">
+				if (ftp.RenameFile('image.jpg', 'myimage.png')) { app.Alert( 'Rename was successful.' )}; <br>
+					<b id="snip2" style="font-size:100%">if (ftp.GetError()) { alert(ftp.GetError()); } </b><br>
+			</div>
+						<div name="divCopy" align="right">
+				<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(snip2)">&nbsp;&nbsp;Copy&nbsp;&nbsp;</a>
+			</div>
+
+		</div>
+<p>Returns either false (No error) or the details of the error.  You should check this after making calls to the server to make sure no errors occurred.</p>
+<br><br>
+		<div data-role="collapsible" data-collapsed="true"  data-mini="true" data-theme="a" data-content-theme="b">
+			<h3>Example - Connect/Disconnect/Directory</h3>
+<div id="examp1" style="font-size:70%">
+app.LoadPlugin("FtpClient"); <br>
+var res = ''; <br>
+ <br>
+function OnStart()  <br>
+{ <br>
+&nbsp;&nbsp;lay1 = app.CreateLayout("Linear"); <br>
+ <br>
+&nbsp;&nbsp;Utxt = app.CreateText("Username:", .3, -1, "Bold"); <br>
+&nbsp;&nbsp;lay1.AddChild(Utxt); <br>
+ <br>
+&nbsp;&nbsp;Uedt = app.CreateTextEdit("", 0.8, -1, "NoSpell,MonoSpace,SingleLine"); <br>
+&nbsp;&nbsp;lay1.AddChild(Uedt); <br>
+ <br>
+&nbsp;&nbsp;Ptxt = app.CreateText("Password:", .3, -1, "Bold"); <br>
+&nbsp;&nbsp;lay1.AddChild(Ptxt); <br>
+ <br>
+&nbsp;&nbsp;Pedt = app.CreateTextEdit("", 0.8, -1, "NoSpell,MonoSpace,SingleLine"); <br>
+&nbsp;&nbsp;lay1.AddChild(Pedt); <br>
+ <br>
+&nbsp;&nbsp;Stxt = app.CreateText("Server:", .3, -1, "Bold"); <br>
+&nbsp;&nbsp;lay1.AddChild(Stxt); <br>
+ <br>
+&nbsp;&nbsp;Sedt = app.CreateTextEdit("", 0.8, -1, "NoSpell,MonoSpace,SingleLine"); <br>
+&nbsp;&nbsp;lay1.AddChild(Sedt); <br>
+ <br>
+&nbsp;&nbsp;lay2 = app.CreateLayout("Linear", "Horizontal,FillXY"); <br>
+&nbsp;&nbsp;btn = app.CreateButton("Connect"); <br>
+&nbsp;&nbsp;btn.SetOnTouch(CallPlugin1); <br>
+&nbsp;&nbsp;lay2.AddChild(btn); <br>
+&nbsp;&nbsp;btn2 = app.CreateButton("Disconnect"); <br>
+&nbsp;&nbsp;btn2.SetOnTouch(CallPlugin2); <br>
+&nbsp;&nbsp;lay2.AddChild(btn2); <br>
+&nbsp;&nbsp;btn3 = app.CreateButton("Directory"); <br>
+&nbsp;&nbsp;btn3.SetOnTouch(CallPlugin3); <br>
+&nbsp;&nbsp;lay2.AddChild(btn3); <br>
+&nbsp;&nbsp;btn4 = app.CreateButton("File Exist"); <br>
+&nbsp;&nbsp;btn4.SetOnTouch(CallPlugin4); <br>
+&nbsp;&nbsp;lay2.AddChild(btn4); <br>
+&nbsp;&nbsp;lay2.SetMargins(0, 0.1, 0, 0); <br>
+&nbsp;&nbsp;lay1.AddChild(lay2); <br>
+ <br>
+&nbsp;&nbsp;Rscroll = app.CreateScroller(1.0, 0.25, 'FillXY'); <br>
+&nbsp;&nbsp;Rscroll.SetBackColor("#FFFFFF"); <br>
+&nbsp;&nbsp;Rtxt = app.CreateText('Server Response', 1, -1, "MultiLine,Left"); <br>
+&nbsp;&nbsp;Rtxt.SetTextColor('#000000'); <br>
+&nbsp;&nbsp;Rtxt.SetBackColor("#FFFFFF"); <br>
+&nbsp;&nbsp;Rscroll.AddChild(Rtxt); <br>
+&nbsp;&nbsp;Rscroll.SetMargins(0, 0.1, 0, 0); <br>
+&nbsp;&nbsp;lay1.AddChild(Rscroll); <br>
+ <br>
+&nbsp;&nbsp;app.AddLayout(lay1); <br>
+ <br>
+&nbsp;&nbsp;ftp = app.CreateFtpClient(); <br>
+&nbsp;&nbsp;ftp.SetOnResponse(HandleResponse); <br>
+&nbsp;&nbsp;ftp.SetPort('21'); <br>
+&nbsp;&nbsp;ftp.SetServerTimeout('10'); <br>
+&nbsp;&nbsp;app.ShowPopup( ftp.GetVersion() );
+} <br>
+ <br>
+function CallPlugin1() <br>
+{ <br>
+&nbsp;&nbsp;var u = Uedt.GetText(); <br>
+&nbsp;&nbsp;var p = Pedt.GetText(); <br>
+&nbsp;&nbsp;var s = Sedt.GetText(); <br>
+&nbsp;&nbsp;var c = ftp.Connect(u, p, s); <br>
+&nbsp;&nbsp;if (c) { res = ''; app.ShowPopup('You were connected successfully'); }<br>
+&nbsp;&nbsp;if (ftp.GetError()) { app.ShowPopup(ftp.GetError()); } <br>
+} <br>
+ <br>
+function CallPlugin2()  <br>
+{ <br>
+&nbsp;&nbsp;app.ShowPopup(ftp.Disconnect()); <br>
+} <br>
+ <br>
+function CallPlugin3()  <br>
+{ <br>
+&nbsp;&nbsp;var list = ftp.GetDirectoryList(null); <br>
+&nbsp;&nbsp;if (ftp.GetError()) { app.ShowPopup(ftp.GetError()); } <br>
+&nbsp;&nbsp;if (list) { <br>
+&nbsp;&nbsp;&nbsp;&nbsp;var len = list.length; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;var s = ''; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;for(var i = 0; i < len; i++ ) <br>   &nbsp;&nbsp;&nbsp;&nbsp;{ <br>   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var file = list[i]; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s += "Name: " + file.name + "\nType: " + file.type + "\nSize: " + file.size + " bytes\n" + file.timestamp + "\n\n"; <br>   
+&nbsp;&nbsp;&nbsp;&nbsp;} <br>   
+&nbsp;&nbsp;&nbsp;&nbsp;app.Alert(s); <br>
+&nbsp;&nbsp;} <br>
+} <br>
+ <br>
+function CallPlugin4()  <br>
+{ <br>
+&nbsp;&nbsp;var file1 = ftp.FileExists('index.html'); <br>
+&nbsp;&nbsp;if (ftp.GetError()) { alert(ftp.GetError()); } <br>
+&nbsp;&nbsp;var file2 = ftp.FileExists('myimage.png'); <br>
+&nbsp;&nbsp;if (ftp.GetError()) { alert(ftp.GetError()); } <br>
+&nbsp;&nbsp;var file1txt = (file1) ? 'Exists' : 'Not Found';
+&nbsp;&nbsp;var file2txt = (file2) ? 'Exists' : 'Not Found';
+&nbsp;&nbsp;app.ShowPopup('index.html ' + file1txt + "\nmyimage.png " + file2txt); <br>
+} <br>
+ <br>
+function HandleResponse(txt)  <br>
+{ <br>
+&nbsp;&nbsp;res += txt + "\n"; <br>
+&nbsp;&nbsp;Rtxt.SetText(res); <br>
+}
+</div>
+			<div name="divCopy" align="right">
+			<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(examp1)">Copy All</a>
+			<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo(examp1)">&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a>
+			</div>
+		</div>
+<br>
+<p><span style="color:#0099CC">This plugin was written by Chris Ferrell, it is free to use in your projects.  <b>A credit line if used would be nice :)</span></b></p><br>
+<small>This plugin utilizes apache.commons.net, which is licensed under Apache License 2.0.</small>
+	</div><!-- /content -->
+	
+</div><!-- /page -->
+
+</body>
+</html>

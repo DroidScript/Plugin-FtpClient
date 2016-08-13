@@ -1,0 +1,97 @@
+
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<title>Directory Methods</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<link rel="stylesheet"  href="../css/themes/default/theme.min.css" />
+		<link rel="stylesheet"  href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css" />
+		<script src="../js/energize-min.js"></script>
+		<script src="../js/jquery-1.8.1.min.js"></script>
+		<script src="../../../app.js"></script>
+		<script src="../js/example.js"></script>
+		<link rel="stylesheet" href="../css/docs.css" />
+		<script src="../js/jquery.mobile-1.2.0.min.js"></script>
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-position="fixed">
+		<a href='#' class='ui-btn-left' data-icon='arrow-l' data-theme="c" onclick="history.back(); return false">Back</a> <h1>Directory Methods</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+<div class="samp">&nbsp;ftp.GetCurrentDirectory();</div>
+<p><span style="color:#0099CC">Returns:</span> The current working directory</p><br>
+<div class="samp">&nbsp;ftp.ChangeWorkingDirectory(path);</div>
+<p>Changes the current working directory to 'path'.  This can be relative to current working directory, or absolute from the FTP root directory.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.GetDirectoryList(path);</div>
+<p>This method returns a Multi-Dimensional Array Object, each dimension contains the following keys: name, type, size, user, group, timestamp, datetime.<br><br>Size is in bytes. Type will be either 'File' or 'Directory'. Timestamp and Datetime have the same value, just formatted differently.</p>
+		<div data-role="collapsible" data-collapsed="true"  data-mini="true" data-theme="a" data-content-theme="b">
+			<h3>Example - Directory List</h3>
+			<div id="examp1" style="font-size:70%">
+<b id="snip1" style="font-size:100%">var list = ftp.GetDirectoryList('');</b> <br>
+if (ftp.GetError()) { app.ShowPopup(ftp.GetError()); } <br>
+if (list) { <br>
+&nbsp;&nbsp;var len = list.length; <br>
+&nbsp;&nbsp;var s = ''; <br>
+&nbsp;&nbsp;for(var i = 0; i < len; i++ ) <br>
+&nbsp;&nbsp;{ <br>   
+&nbsp;&nbsp;&nbsp;&nbsp;var file = list[i]; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;s += "Name: " + file.name + "\nType: " + file.type + "\nSize: " + file.size + " bytes\n" + file.timestamp + "\n\n"; <br>   
+&nbsp;&nbsp;} <br>   
+&nbsp;&nbsp;app.Alert(s); <br>
+} <br>
+			</div>
+						<div name="divCopy" align="right">
+				<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(snip1)">&nbsp;&nbsp;Copy&nbsp;&nbsp;</a>
+			</div>
+
+		</div>
+<br><span style="color:#0099CC">Returns:</span> Multi-Dimensional Array Object or Boolean false on Error.<br>Use <i>ftp.GetError()</i> for error handling.</p>
+<br>
+<div class="samp">&nbsp;ftp.CreateDirectory(path);</div>
+<p>This will create a new directory 'path'.  If relative it will create it <i>relative</i> to CurrentWorkingDirectory.  Absolute paths start at the FTP root directory.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.RemoveDirectory(path);</div>
+<p>This will remove the directory 'path'.  It can be relative or absolute.  <b>The directory must be empty or this will fail.</b><br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.DirectoryExists(directory);</div>
+<p>This will check if a 'directory' exists on the server.  The path can be relative to CurrentWorkingDirectory or absolute from the FTP root. Use <i>ftp.FileExists</i> for checking if a file exists.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.SetOnStatus(callback);</div>
+<p>This allows a callback to process the status of uploading/downloading directories and force deleting a directory using the next three methods (<i>ftp.UploadDirectory</i>, <i>ftp.DownloadDirectory</i>, and <i>ftp.ForceDeleteDirectory</i>).  Be advised, this can be called multiple times, rapidly, as the server handles the requests.  Be sure to add/append the responses to keep an accurate record. This should be set <b>before</b> calling any of the following methods.<br>
+<br><span style="color:#0099CC">Returns:</span> String containing status messages to your callback function.</p><br>
+<div class="samp">&nbsp;ftp.DownloadDirectory(remote, local, mode);</div>
+<p>This will download '<i>remote</i>' directory, recursively (all included sub-directories and files) to '<i>local</i>' storage. 'remote' can be relative to CurrentWorkingDirectory or absolute to FTP root. 'local' <b>must be an absolute path</b> (Example: '/sdcard'). Mode accepts two options, 'ASCII' and 'BINARY'.  Defaults to 'BINARY'.<br><br>Use <i>ftp.SetOnStatus</i> to set a callback to process transfer status messages.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p>
+		<div data-role="collapsible" data-collapsed="true"  data-mini="true" data-theme="a" data-content-theme="b">
+			<h3>Example - Download Directory</h3>
+			<div id="examp2" style="font-size:70%">
+				ftp.SetOnStatus ( status_callback );<br>
+				<b id="snip2" style="font-size:100%">ftp.DownloadDirectory('/images', '/sdcard', 'BINARY');</b>
+			</div>
+						<div name="divCopy" align="right">
+				<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(snip2)">&nbsp;&nbsp;Copy&nbsp;&nbsp;</a>
+			</div>
+
+		</div>
+<br><br>	
+<div class="samp">&nbsp;ftp.UploadDirectory(local, remote, mode);</div>
+<p>This will upload '<i>local</i>' directory, recursively (all included sub-directories and files) to '<i>remote</i>' server.  'remote' can be either relative to CurrentWorkingDirectory or an absolute path from FTP root. Mode accepts two options, 'ASCII' and 'BINARY'.  Defaults to 'BINARY'.<br><br>Use <i>ftp.SetOnStatus</i> to set a callback to process transfer status messages.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p><br>
+<div class="samp">&nbsp;ftp.ForceDeleteDirectory(directory);</div>
+<p>This will force delete 'directory', including all sub-directories and files.
+<br><br>Use <i>ftp.SetOnStatus</i> to set a callback to process directory delete status messages.<br>
+<br><span style="color:#0099CC">Returns:</span> boolean true or false<br>Use <i>ftp.GetError()</i> for error handling.</p>
+			
+	</div><!-- /content -->
+	
+</div><!-- /page -->
+
+</body>
+</html>
